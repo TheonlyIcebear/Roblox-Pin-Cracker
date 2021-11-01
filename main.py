@@ -7845,7 +7845,7 @@ except:
   elif response['errors'][0]['message'] == 'Authorization has been denied for this request.':
     cprint("Error found. Invalid Cookie. Close the program then re-enter the cookie and try again", "red")
   elif response['errors'][0]['message'] == 'Token Validation Failed':
-    cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "red")
+    cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie.", "red")
   elif check.status_code ==404:
     cprint("Error found. Roblox's api endpoint may have changed", "red")
   cprint("We advise you close and re-run the program", 'yellow')
