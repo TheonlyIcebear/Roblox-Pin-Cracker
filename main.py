@@ -7785,7 +7785,7 @@ try:
       time.sleep(0.1)
       cprint(char, 'magenta', end='', flush=True)
     print("")
-    for char in 'Leave this running for about 24 hours':
+    for char in 'Leave this running for about 6-10 hours':
       time.sleep(0.1)
       cprint(char, 'magenta', end='', flush=True)
     print("")
