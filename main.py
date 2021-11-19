@@ -1,7 +1,5 @@
 import requests
 import random
-import string
-import names
 from termcolor import cprint
 import time
 
@@ -7768,9 +7766,6 @@ userAgents = ["Mozilla/4.0 (Mozilla/4.0; MSIE 7.0; Windows NT 5.1; FDM; SV1)",
 "Opera/9.80 (X11; U; Linux i686; en-US; rv:1.9.2.3) Presto/2.2.15 Version/10.10",
 "Opera/9.99 (Windows NT 5.1; U; pl) Presto/9.9.9",]
 try:
-  letters = string.ascii_lowercase
-  msg = ''.join(random.choice(letters) for i in range(10))
-  name = (names.get_full_name()).replace(" ", ".").lower()
   proxy = random.choice(proxies)
   headers = {}
   authurl = "https://auth.roblox.com/v2/logout"
