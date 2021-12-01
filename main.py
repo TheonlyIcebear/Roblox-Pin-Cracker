@@ -2,6 +2,18 @@ import requests
 import random
 from termcolor import cprint
 import time
+import os
+from sys import platform
+
+if platform == "linux" or platform == "linux2":
+            #LINUX
+            os.system('clear')
+elif platform == "darwin":
+            #OSX
+            os.system('clear')
+elif platform == "win32":
+            #WINDOWS
+            os.system('cls')
 
 proxies = ["http://51.91.157.66:80",
             "http://196.15.221.201:80",
