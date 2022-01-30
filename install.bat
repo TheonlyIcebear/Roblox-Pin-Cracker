@@ -1,6 +1,6 @@
-pip intall termcolor
-pip intall random
-pip intall requests
-pip intall random
-pip intall time
-pip intall os
+pip install termcolor
+pip install random
+pip install requests
+pip install random
+pip install time
+pip install os
