@@ -27,7 +27,9 @@ Made by Ice Bear#0167. Discord here: (Discontinued)
 The current number will save your progress on which pin the program is trying.
 # Warning
 It can take up to 29 days to crack the pin assuming their pin is 9999.
+
 There is no way to speed this process up as roblox has very large ratelimits that you can't bypass with proxies.
+
 That's why this tool doesn't waste time using proxies or userAgents.
 
 The program will save the number it was attempting to save your progress.
