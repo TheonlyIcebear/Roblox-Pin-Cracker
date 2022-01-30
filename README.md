@@ -4,9 +4,13 @@ Made by Ice Bear#0167. Discord here: (Discontinued)
 # How to use
 1.) Install python if you haven't already: https://www.python.org/downloads/
 
-2.) Run the main.py file then enter your cookie.
+2.) Install pip using this link https://pip.pypa.io/en/stable/installation/
 
-3.) Then just wait. The program will let you know when the pin is found on the console or your webhook. It will also alert you off any errors.
+3.) Install the requirements by either running install.bat or doing `pip intall termcolor` 
+
+3.) Run the main.py file then enter your cookie.
+
+4.) Then just wait. The program will let you know when the pin is found on the console or your webhook. It will also alert you off any errors.
 
 The current number will save your progress on which pin the program is trying.
 # Warning
