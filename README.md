@@ -4,25 +4,7 @@ Made by Ice Bear#0167. Discord here: (Discontinued)
 # How to use
 1.) Install python if you haven't already: https://www.python.org/downloads/
 
-2.) Install pip using this link https://pip.pypa.io/en/stable/installation/
-
-3.) Install the requirements by either running install.bat or doing:
-
-`pip install termcolor` 
-
-`pip install random` 
-
-`pip install requests`
-
-`pip install random` 
-
-`pip install time`
-
-`pip install os`
-
-3.) Run the main.py file then enter your cookie.
-
-4.) Then just wait. The program will let you know when the pin is found on the console and your webhook. It will also alert you off any errors. The program will save the number it was attempting so you can continue bruteforcing later.
+2.) Just run the program. It will intall any missing modules or install pip if needed. The program will save your progress on bruteforcing the pin so you can just re run the program later
 # Warning
 It can take up to 29 days to crack the pin assuming their pin is 9999.
 There is no way to speed this process up as roblox has very large ratelimits that you can't bypass with proxies.
