@@ -8,17 +8,17 @@ Made by Ice Bear#0167. Discord here: (Discontinued)
 
 3.) Install the requirements by either running install.bat or doing:
 
-`pip intall termcolor` 
+`pip install termcolor` 
 
-`pip intall random` 
+`pip install random` 
 
-`pip intall requests`
+`pip install requests`
 
-`pip intall random` 
+`pip install random` 
 
-`pip intall time`
+`pip install time`
 
-`pip intall os`
+`pip install os`
 
 3.) Run the main.py file then enter your cookie.
 
