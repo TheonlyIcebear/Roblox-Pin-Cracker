@@ -7,12 +7,19 @@ Made by Ice Bear#0167. Discord here: (Discontinued)
 2.) Install pip using this link https://pip.pypa.io/en/stable/installation/
 
 3.) Install the requirements by either running install.bat or doing:
+
 `pip intall termcolor` 
+
 `pip intall random` 
+
 `pip intall requests`
+
 `pip intall random` 
+
 `pip intall time`
+
 `pip intall os`
+
 3.) Run the main.py file then enter your cookie.
 
 4.) Then just wait. The program will let you know when the pin is found on the console or your webhook. It will also alert you off any errors.
