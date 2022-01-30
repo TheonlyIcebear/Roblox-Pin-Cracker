@@ -6,7 +6,7 @@ Made by Ice Bear#0167. Discord here: (Discontinued)
 
 2.) Just run the program. It will intall any missing modules or install pip if needed. The program will save your progress on bruteforcing the pin so you can just re run the program later
 # Warning
-It can take up to 29 days to crack the pin assuming their pin is 9999.
+It can take up to 24 days to crack the pin assuming their pin is 9999.
 There is no way to speed this process up as roblox has very large ratelimits that you can't bypass with proxies.
 That's why this tool doesn't waste time using proxies or user agents.
 
