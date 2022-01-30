@@ -22,16 +22,11 @@ Made by Ice Bear#0167. Discord here: (Discontinued)
 
 3.) Run the main.py file then enter your cookie.
 
-4.) Then just wait. The program will let you know when the pin is found on the console or your webhook. It will also alert you off any errors.
-
-The current number will save your progress on which pin the program is trying.
+4.) Then just wait. The program will let you know when the pin is found on the console and your webhook. It will also alert you off any errors. The program will save the number it was attempting so you can continue bruteforcing later.
 # Warning
 It can take up to 29 days to crack the pin assuming their pin is 9999.
-
 There is no way to speed this process up as roblox has very large ratelimits that you can't bypass with proxies.
-
 That's why this tool doesn't waste time using proxies or userAgents.
 
-The program will save the number it was attempting to save your progress.
 # Disclaimer
 This program is for educational purposes only.
