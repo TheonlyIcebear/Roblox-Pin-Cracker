@@ -74,7 +74,7 @@ def diagnose(error):
       print("[", end="")
       cprint(" ERROR ", "red", end="")
       print("] " , end="")
-      print(f"Error occured with the program or your computer.")
+      print(f"A local error occured with the program's code or your computer.")
 # --({ Crack Pin }) -- #
 class crack:
   global headers
