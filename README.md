@@ -26,7 +26,7 @@ Made by Ice Bear#0167. Discord here: (Discontinued)
 # Warning
 It can take up to 29 days to crack the pin assuming their pin is 9999.
 There is no way to speed this process up as roblox has very large ratelimits that you can't bypass with proxies.
-That's why this tool doesn't waste time using proxies or userAgents.
+That's why this tool doesn't waste time using proxies or user agents.
 
 # Disclaimer
 This program is for educational purposes only.
