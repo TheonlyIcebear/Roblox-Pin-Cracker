@@ -19,7 +19,6 @@ except:
   print("] " , end="")
   print('\033[31m'+"Packages not installed. Installing now...")
   subprocess.call("pip install termcolor", shell=True)
-  subprocess.call("pip install requests", shell=True)
 finally:
   from termcolor import cprint
 # --({ Get Xsrf Token }) -- #
@@ -149,10 +148,16 @@ class crack:
       print("] ", end="")
       cprint("Done", "magenta")
       time.sleep(1)
+    print("[", end="")
+    cprint(" BRUTEFORCER ", "magenta", end="")
+    print("] ", end="")
     for char in 'Cracking the pin....':
       time.sleep(0.1)
       cprint(char, 'magenta', end='', flush=True)
     print("")
+    print("[", end="")
+    cprint(" BRUTEFORCER ", "magenta", end="")
+    print("] ", end="")
     for char in 'Leave this running for about around 5-29 days':
       time.sleep(0.1)
       cprint(char, 'magenta', end='', flush=True)
