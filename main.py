@@ -156,7 +156,6 @@ class crack:
       headers = {
       'X-CSRF-TOKEN': getXsrf(cookie),
       }
-      clear()
       # --({ Start from progress saved }) -- #
       if continueProgress:
         try:
