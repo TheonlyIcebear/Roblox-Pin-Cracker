@@ -244,5 +244,5 @@ if __name__ == "__main__":
   crack = crack()
   try:
     crack.start()
-  except:
+  except Exception as e:
     diagnose(e)
