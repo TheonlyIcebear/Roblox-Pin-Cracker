@@ -11,4 +11,4 @@ There is no way to speed this process up as roblox has very large ratelimits tha
 That's why this tool doesn't waste time using proxies or user agents.
 
 # Disclaimer
-This program is for educational purposes only.
+This program is for educational purposes only. It is not very practical for actual account hacking seeing how much time it takes.
