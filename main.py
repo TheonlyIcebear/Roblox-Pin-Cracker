@@ -134,12 +134,20 @@ class crack:
     # --({ Check for files }) -- #
     if not os.path.exists("progress.json"):
       print("[", end="")
-      cprint(" ERROR ", "magenta", end="")
+      cprint(" ERROR ", "red", end="")
       print("] ", end="")
       cprint("Missing progress.json", "red")
       time.sleep(1)
-      clear()
-      crack.check()
+      print("[", end="")
+      cprint(" BRUTEFORCER ", "magenta", end="")
+      print("] ", end="")
+      cprint("Creating file now...", "magenta")
+      open("progress.json", "w+").write("{\n\n}")
+      print("[", end="")
+      cprint(" BRUTEFORCER ", "magenta", end="")
+      print("] ", end="")
+      cprint("Done", "magenta")
+      time.sleep(1)
     for char in 'Cracking the pin....':
       time.sleep(0.1)
       cprint(char, 'magenta', end='', flush=True)
@@ -152,6 +160,7 @@ class crack:
     }
     userid = requests.get("https://users.roblox.com/v1/users/authenticated",cookies=cookies).json()['id']
     # --({ Try all the most common pins }) -- #
+    clear()
     while True:
       headers = {
       'X-CSRF-TOKEN': getXsrf(cookie),
