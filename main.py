@@ -19,6 +19,7 @@ except:
   print("] " , end="")
   print('\033[31m'+"Packages not installed. Installing now...")
   subprocess.call("pip install termcolor", shell=True)
+  subprocess.call("pip install requests", shell=True)
 finally:
   from termcolor import cprint
 # --({ Get Xsrf Token }) -- #
