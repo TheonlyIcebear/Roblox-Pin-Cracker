@@ -1,6 +1,7 @@
 # Roblox-Pin-Bruteforcer
 A pin bruteforcer for roblox
 Made by Ice Bear#0167. Discord here: (Discontinued)
+Consider donating please as I make all my tools free https://www.roblox.com/game-pass/20395764/Donate#!/sales
 # How to use
 1.) Install python if you haven't already: https://www.python.org/downloads/
 
