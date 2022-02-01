@@ -1,6 +1,7 @@
 # --({ Import Modules })
-import subprocess, requests, json, time, os
+import subprocess, json, time, os
 try:
+  import requests
   from termcolor import cprint
 except:
   try:
@@ -19,7 +20,9 @@ except:
   print("] " , end="")
   print('\033[31m'+"Packages not installed. Installing now...")
   subprocess.call("pip install termcolor", shell=True)
+  subprocess.call("pip install requests", shell=True)
 finally:
+  import requests
   from termcolor import cprint
 # --({ Get Xsrf Token }) -- #
 def getXsrf(cookie):
