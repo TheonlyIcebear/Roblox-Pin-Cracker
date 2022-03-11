@@ -226,8 +226,11 @@ class crack:
               cprint("ERROR", end="")
               print("] " , end="")
               cprint('Invalid Webhook', 'red')
-            while True:
-              pass
+            print("[", end="")
+            cprint(" BRUTEFORCER ", "magenta", end="")
+            print("] " , end="")
+            cprint("Press enter to continue...", 'red')
+            input("> ")
           if response['errors'][0]['code'] == 4:
             print("[", end="")
             cprint(" BRUTEFORCER ", "magenta", end="")
