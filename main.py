@@ -238,7 +238,7 @@ class crack:
             cprint(" RATELIMIT ", "yellow", end="")
             print("] " , end="")
             cprint(f'Too many requests. Waiting 10 minutes before resumimg', 'yellow')
-            time.sleep(600)
+            time.sleep(60 * 15)
           if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
             print("[", end="")
             cprint(" ERROR ", "red", end="")
