@@ -119,7 +119,11 @@ class main:
 					  ".MuiBox-root.jss359.jss44", 
 					  ".MuiBox-root.jss221.jss44",
 					  ".MuiBox-root.jss233.jss44",
-					  ".MuiBox-root.jss226.jss44"]
+					  ".MuiBox-root.jss226.jss44",
+					  ".MuiBox-root.jss247.jss44",
+					  ".MuiBox-root.jss240.jss44",
+					  ".MuiBox-root.jss214.jss44",
+					  ".MuiBox-root.jss228.jss44"]
 					  
 		for possibleclass in classnames:
 			try:
@@ -196,7 +200,7 @@ class main:
 			try:
 				self.webhook = config["webhook"]
 				if not "https://" in self.webhook:
-					uiprint("Invalid webhook inside JSON file file. Make sure you put the https:// with it.")
+					uiprint("Invalid webhook inside JSON file file. Make sure you put the https:// with it.", "warning")
 			except:
 				uiprint("Invalid webhook boolean inside JSON file. Make sure it's a valid string", "error")
 				time.sleep(1.6)
@@ -301,9 +305,13 @@ class main:
 				games = json.loads(data)
 			except json.decoder.JSONDecodeError:
 				uiprint("Blocked by ddos protection. Solve the captcha to continue.", "error")
-				time.sleep(20)
-				browser.close()
-				exit()
+			while True:
+				try:
+					data = browser.page_source.replace('<html><head><meta name="color-scheme" content="light dark"></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">', "").replace("</pre></body></html>", "")
+					games = json.loads(data)
+					break
+				except json.decoder.JSONDecodeError:
+					pass
 			if not history == games["history"]:
 				history = games["history"]
 				yield [games["history"][0]["crashPoint"], [float(crashpoint["crashPoint"]) for crashpoint in history[:average]]]
@@ -434,17 +442,17 @@ class main:
 			uiprint(f"Placing bet with {betamount} Robux on {multiplier}x multiplier")
 
 			data = {
-                "content" : "",
-                "username" : "Smart Bet",
-                "embeds": [
-	                			{
-	                				"description" : f"Betting {betamount} Robux at {prediction}x\n{balance-betamount} Robux Left",
-	                				"title" : f"Betting {betamount} Robux ",
-	                				"color" : 0x903cde
-	                			}
-	                		]
-            }
-            requests.post(webhook, json=data)
+				"content" : "",
+				"username" : "Smart Bet",
+				"embeds": [
+								{
+									"description" : f"Betting {betamount} Robux at {prediction}x\n{balance-betamount} Robux Left",
+									"title" : f"Betting {betamount} Robux ",
+									"color" : 0x903cde
+								}
+							]
+			}
+			requests.post(webhook, json=data)
 
 			if lastgame:
 				lastgame = game[0]
@@ -454,17 +462,17 @@ class main:
 					uiprint(f"Lost previous game. Increasing bet amount to {betamount}", "bad")
 
 					data = {
-		                "content" : "",
-		                "username" : "Smart Bet",
-		                "embeds": [
-			                			{
-			                				"description" : f"You lost with {betamount}\nYou have {balance} Left",
-			                				"title" : "You lost",
-			                				"color" : 0xcc1c16
-			                			}
-			                		]
-		            }
-		            requests.post(webhook, json=data)
+						"content" : "",
+						"username" : "Smart Bet",
+						"embeds": [
+										{
+											"description" : f"You lost with {betamount}\nYou have {balance} Left",
+											"title" : "You lost",
+											"color" : 0xcc1c16
+										}
+									]
+					}
+					requests.post(webhook, json=data)
 
 					try:
 						threading.Thread(target=playsounds, args=('Assets\Loss.mp3',)).start()
@@ -476,17 +484,17 @@ class main:
 					uiprint(f"Won game. Lowering bet amount to {betamount}", "good")
 
 					data = {
-		                "content" : "",
-		                "username" : "Smart Bet",
-		                "embeds": [
-			                			{
-			                				"description": f"You have won with {betamount}\nYou have {balance} now",
-			                				"title" : "You Won!",
-			                				"color" : 0x83d687
-			                			}
-			                		]
-		            }
-		            requests.post(webhook, json=data)
+						"content" : "",
+						"username" : "Smart Bet",
+						"embeds": [
+										{
+											"description": f"You have won with {betamount}\nYou have {balance} now",
+											"title" : "You Won!",
+											"color" : 0x83d687
+										}
+									]
+					}
+					requests.post(webhook, json=data)
 
 					try:
 						threading.Thread(target=playsounds, args=('Assets\Win.mp3',)).start()

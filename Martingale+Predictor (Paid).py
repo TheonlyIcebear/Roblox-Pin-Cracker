@@ -4,6 +4,7 @@ import subprocess, threading, selenium, requests, logging, base64, json, time, o
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from win10toast import ToastNotifier
+from seleniumwire import webdriver
 from playsound import playsound
 from selenium import webdriver
 from termcolor import cprint
@@ -119,7 +120,10 @@ class main:
 					  ".MuiBox-root.jss221.jss44",
 					  ".MuiBox-root.jss233.jss44",
 					  ".MuiBox-root.jss226.jss44",
-					  ".MuiBox-root.jss247.jss44"]
+					  ".MuiBox-root.jss247.jss44",
+					  ".MuiBox-root.jss240.jss44",
+					  ".MuiBox-root.jss214.jss44",
+					  ".MuiBox-root.jss228.jss44"]
 
 		for possibleclass in classnames:
 			try:
@@ -138,12 +142,18 @@ class main:
 		return balance
 
 
+	def interceptor(request):
+	    del request.headers['x-auth-token']  # Delete the header first
+	    request.headers['x-auth-token'] = self.auth
+
+
+
 	def getConfig(self): # Get configuration from config.json file
 		uiprint = self.print
 		print("[", end="")
 		cprint(base64.b64decode(b'IENSRURJVFMg').decode('utf-8'), "cyan", end="")
 		print("]", end="")
-		print(base64.b64decode(b'IE1hZGUgYnkgSWNlIEJlYXIjMDE2Nw==').decode('utf-8'))
+		print(base64.b64decode(b'IE1hZGUgYnkgSWNlIEJlYXIjMDE2NyAmIEN1dGVjYXQgYnV0IHRlcm1lZCM0NzI4').decode('utf-8'))
 		time.sleep(3)
 		self.clear()
 
@@ -206,7 +216,7 @@ class main:
 				if not "https://" in self.webhook:
 					uiprint("Invalid webhook inside JSON file file. Make sure you put the https:// with it.")
 			except:
-				uiprint("Invalid webhook boolean inside JSON file. Make sure it's a valid string", "error")
+				uiprint("Invalid webhook inside JSON file. Make sure it's a valid string", "warning")
 				time.sleep(1.6)
 				exit()
 
@@ -266,8 +276,13 @@ class main:
 
 			self.installDriver()
 			options = webdriver.ChromeOptions()
+			options.add_argument(f'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36')
+			options.add_argument('--disable-extensions')
+			options.add_argument('--profile-directory=Default')
+			options.add_argument("--incognito")
+			options.add_argument("--disable-plugins-discovery");
 			options.add_experimental_option("excludeSwitches", ["enable-automation", 'enable-logging'])
-			options.add_experimental_option('useAutomationExtension', False)
+			options.add_experimental_option('useAutomationExtension', False)		
 			try:
 				self.browser = webdriver.Chrome("chromedriver.exe", options=options)
 			except selenium.common.exceptions.SessionNotCreatedException:
@@ -302,25 +317,17 @@ class main:
 			elements[1].send_keys(f"{self.multiplier}")
 
 
-	def ChrashPoints(self):		
-		browser = webdriver.Chrome('chromedriver.exe')
-		browser.get("https://rest-bf.blox.land/games/crash")
-
+	def ChrashPoints(self):
+		browser = self.browser
 		average = self.average
 		history = None
 		uiprint = self.print
 		sent = False
 		
+		
+
 		while True:
-			browser.refresh()
-			data = browser.page_source.replace('<html><head><meta name="color-scheme" content="light dark"></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">', "").replace("</pre></body></html>", "")
-			try:
-				games = json.loads(data)
-			except json.decoder.JSONDecodeError:
-				uiprint("Blocked by ddos protection. Solve the captcha to continue.", "error")
-				time.sleep(20)
-				browser.close()
-				exit()
+			games = browser.execute_script("""return fetch('https://rest-bf.blox.land/games/crash').then(res => res.json());""")
 			if not history == games["history"]:
 				history = games["history"]
 				yield [games["history"][0]["crashPoint"], [float(crashpoint["crashPoint"]) for crashpoint in history[:average]]]
@@ -391,17 +398,17 @@ class main:
 					betamount = self.betamount
 					uiprint(f"Won previous game. lowering bet amount to {betamount}", "good")
 					data = {
-		                "content" : "",
-		                "username" : "Smart Bet",
-		                "embeds": [
-			                			{
-			                				"description": f"You have won with {betamount}\nYou have {balance} now",
-			                				"title" : "You Won!",
-			                				"color" : 0x83d687
-			                			}
-			                		]
-		            }
-		            requests.post(webhook, json=data)
+						"content" : "",
+						"username" : "Smart Bet",
+						"embeds": [
+										{
+											"description": f"You have won with {betamount}\nYou have {balance} now",
+											"title" : "You Won!",
+											"color" : 0x83d687
+										}
+									]
+					}
+					requests.post(webhook, json=data)
 					uiprint(f"Accuracy on previous guess: {(1-(abs(multiplier-lastgame)/lastgame))*100}", "yellow")
 					self.updateBetAmount(betamount)
 					try:
@@ -412,17 +419,17 @@ class main:
 					betamount *= 2
 					uiprint(f"Lost previous game. Increasing bet amount to {betamount}", "bad")
 					data = {
-		                "content" : "",
-		                "username" : "Smart Bet",
-		                "embeds": [
-			                			{
-			                				"description" : f"You lost with {betamount}\nYou have {balance} Left",
-			                				"title" : "You lost",
-			                				"color" : 0xcc1c16
-			                			}
-			                		]
-		            }
-		            requests.post(webhook, json=data)
+						"content" : "",
+						"username" : "Smart Bet",
+						"embeds": [
+										{
+											"description" : f"You lost with {betamount}\nYou have {balance} Left",
+											"title" : "You lost",
+											"color" : 0xcc1c16
+										}
+									]
+					}
+					requests.post(webhook, json=data)
 					uiprint(f"Accuracy on previous guess: {(1-((abs(lastgame-multiplier))/multiplier))*100}", "yellow")
 					self.updateBetAmount(betamount)
 					try:
@@ -559,22 +566,25 @@ class main:
 				continue
 
 			uiprint(f"Placing bet with {betamount} Robux on {prediction}x multiplier")
-            data = {
-                "content" : "",
-                "username" : "Smart Bet",
-                "embeds": [
-	                			{
-	                				"description" : f"Betting {betamount} Robux at {prediction}x\n{balance-betamount} Robux Left",
-	                				"title" : f"Betting {betamount} Robux ",
-	                				"color" : 0x903cde
-	                			}
-	                		]
-            }
-            requests.post(webhook, json=data)
+			data = {
+				"content" : "",
+				"username" : "Smart Bet",
+				"embeds": [
+								{
+									"description" : f"Betting {betamount} Robux at {prediction}x\n{balance-betamount} Robux Left",
+									"title" : f"Betting {betamount} Robux ",
+									"color" : 0x903cde
+								}
+							]
+			}
+			requests.post(webhook, json=data)
 			
 			try:
 				browser.find_element(By.CSS_SELECTOR, ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.jss142.MuiButton-containedPrimary").click()
 			except:
-				browser.find_element(By.CSS_SELECTOR, ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.jss143.MuiButton-containedPrimary").click()
+				try:
+					browser.find_element(By.CSS_SELECTOR, ".MuiButtonBase-root.MuiButton-root.MuiButton-contained.jss143.MuiButton-containedPrimary").click()
+				except:
+					pass
 if __name__ == "__main__":
 	main()
