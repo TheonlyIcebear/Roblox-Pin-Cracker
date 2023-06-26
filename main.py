@@ -190,6 +190,7 @@ class Crack:
 
             pin = pins[line]
             # --({ Check if the pin was found }) -- #
+            printed = False
 
             while True:
 
@@ -218,8 +219,12 @@ class Crack:
                             break
 
                         elif response['errors'][0]['message'] == "Too many requests":
-                            uiprint(f'Too many requests. Waiting 20 minutes before resumimg', 'ratelimit')
-                            time.sleep(60 * 20 + 2)
+                            if not printed:
+                                start = time.time()
+                                uiprint(f'Too many requests. Waiting 20 minutes before resumimg', 'ratelimit')
+                                printed = True
+
+                            time.sleep(1)
                             continue
 
                         if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
