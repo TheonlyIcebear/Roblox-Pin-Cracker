@@ -218,6 +218,7 @@ class Crack:
 
                         if response['errors'][0]['code'] == 4:
                             uiprint("Incorrect Pin", 'red')
+                            printed = False
                             break
 
                         elif response['errors'][0]['message'] == "Too many requests":
